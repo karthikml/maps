@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html ng-app="maps">
+<head>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.4.2/angular-ui-router.js"></script>
+</head>
+<style>
+#maps{
+	height: 400px;
+}
+.container{
+	margin-top: 20px;
+}
+.countriesContainer{
+	width: 100%;
+	height:100%;
+	display: flex;
+	justify-content: center;
+	align-self: center;
+}
+.form-group label{
+	display: block;
+}
+.countries{
+	width: 40%;
+	height: 50%;
+}
+.countries .btn{
+	margin:10px;
+}
+.customSelect{
+	margin:20px 0;
+}
+.options{
+	width: 30%;
+    border: 1px solid #c1c1c1;
+}
+.select{
+	position: relative;
+	width: 240px;
+	height: 40px;
+}
+.select-style{
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	padding: 5p 10px;
+	border: 1px solid #c1c1c1;
+}
+.select-input{
+	width: 80%;
+	height: 100%;
+	border: none;
+}
+.select-option{
+	position: absolute;
+	top:100%;
+	right: 0;
+	left: 0;
+	margin:0;
+	padding: 0;
+	list-style: none;
+}
+.select-option li{
+	margin: 0;
+	padding: 5px;
+	border: 1px solid #c1c1c1;
+	background-color: #ffffff;
+}
+.select-arrow{
+	display: inline-block;
+	width: 18%;
+}
+.arrow-up {
+  	width: 0; 
+  	height: 0; 
+  	border-left: 5px solid transparent;
+  	border-right: 5px solid transparent;
+  	border-bottom: 5px solid black;
+}
+.arrow-down{
+	width: 0; 
+  	height: 0; 
+  	border-left: 5px solid transparent;
+  	border-right: 5px solid transparent;
+  	border-top: 5px solid black;
+
+}
+</style>
+<body>
+<div ui-view class="container"></div>
+
+<script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="js/directive.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtiEP_HnR0nB3JOf8lnf8S4G-McrE0tWM" defer></script>
+<script id="html/countries.html" type="text/ng-template">
+	<div class="countriesContainer">
+		<div class="countries">
+			<div ng-repeat="countryObj in countries" ng-click="countryDetails(countryObj)" class="btn btn-primary btn-block">
+				<div class="row">
+				<div class="col-md-3">
+					<img ng-src="{{countryObj.url}}">
+				</div>
+					<div class="col-md-8">
+						<div>Name: {{countryObj.country}}</div>
+						<span>Lat : {{countryObj.latitude}}</span>
+						<span>Lang : {{countryObj.longitude}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<script id="html/country.html" type="text/ng-template">
+	<div class="row">
+		<div class="col-md-6">
+			<custome-select options="cities" select-option="selectCity(selectedOption)"></custome-select>
+			<div class="form-group">
+				<label for="lat">Lat : 
+				</label>
+				<input  id="lat" type="number" name="latitude" ng-model="selectedCord.latitude">
+			</div>
+			<div class="form-group">
+				<label for="lan">Lan : 
+				</label>
+				<input id="lan" type="number" name="longitude" ng-model="selectedCord.longitude">
+			</div>
+			<div class="form-group">
+				<input type="submit" name="submit" class="btn btn-primary" ng-click="viewInMap()">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div id="maps">
+			</div>
+		</div>
+	</div>
+</script>
+<script id="html/customSelect.html" type="text/ng-template">
+	<div class="customSelect">
+	<div class="select" ng-click="expandCollapseOption()">
+				<div class="select-style">
+					<input class="select-input" id="search" type="text" name="search" ng-model="searchString" 
+					ng-change="searchOption()" placeholder="Select City" ng-click="preventPropogation($event)">
+					<div class="select-arrow">
+						<div ng-class="expand?'arrow-down':'arrow-up'"></div>
+					</div>
+				</div>				
+				<ul class="select-option" ng-show="expand">
+					<li ng-repeat="option in filteredOption" ng-click="select(option)">
+						{{option.name}}
+					</li>
+				</ul>
+			</div>
+		<!--<div class="form-group">
+
+			<label for="search">Select City
+			</label>
+			<input id="search" type="text" name="search" ng-model="searchString" ng-change="searchOption()" class="options">
+			<div ng-repeat="option in filteredOption" ng-click="select(option)" class="options">
+			{{option.name}}
+			</div>
+		</div>-->
+		
+	</div>
+</script>
+</body>
+</html>

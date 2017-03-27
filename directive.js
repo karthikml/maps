@@ -1,0 +1,36 @@
+(function(){
+	angular.module('maps')
+	.directive('customeSelect',function(){
+		return{
+			restrict:'E',
+			scope:{
+				options:'=',
+				selectOption:'&'
+			},
+			templateUrl:'html/customSelect.html',
+			controller:function($scope,$filter){
+				console.log($scope);
+				$scope.searchString='';
+				$scope.filteredOption=$scope.options;
+				$scope.searchOption=function(){
+					if($scope.searchString.length>0){
+						$scope.expand=true;
+					}
+					$scope.filteredOption=$filter('filter')($scope.options,{name:$scope.searchString})
+				};
+				$scope.select=function(option){
+					$scope.searchString=option.name;
+					$scope.selectOption({
+						selectedOption:option
+					});
+				}
+				$scope.preventPropogation=function(event){
+					event.stopPropagation();
+				}
+				$scope.expandCollapseOption=function(){
+					$scope.expand=!$scope.expand;
+				}
+			}
+		}
+	})
+})()
